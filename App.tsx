@@ -12,9 +12,12 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {PhotoList} from './src/screens/PhotoList';
+import {AddPhoto} from './src/screens/AddPhoto';
+import {IconButton} from './src/components/IconButton';
 
 export enum NavigationScreens {
   PHOTO_LIST = 'photoListScreen',
+  ADD_PHOTO = 'addPhotoScreen',
 }
 
 const Stack = createNativeStackNavigator();
@@ -27,7 +30,24 @@ const App = () => {
           <Stack.Screen
             name={NavigationScreens.PHOTO_LIST}
             component={PhotoList}
-            options={{headerShown: true, title: 'Photos List'}}></Stack.Screen>
+            options={({navigation}) => ({
+              title: 'Plants',
+              headerBackVisible: false,
+              headerRight: ({tintColor}) => (
+                <IconButton
+                  // iconName={'add'}
+                  // iconSize={24}
+                  //  iconColor={tintColor ?? '#000'}
+                  onPress={() => {
+                    navigation.navigate(NavigationScreens.ADD_PHOTO);
+                  }}
+                />
+              ),
+            })}></Stack.Screen>
+          <Stack.Screen
+            name={NavigationScreens.ADD_PHOTO}
+            component={AddPhoto}
+            options={{headerShown: true, title: 'Add photo'}}></Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     </>
