@@ -13,7 +13,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {PhotoList} from './src/screens/PhotoList';
 import {AddPhoto} from './src/screens/AddPhoto';
-import {IconButton} from './src/components/IconButton';
+import IonicIcons from 'react-native-vector-icons/Ionicons';
+import {TouchableOpacity} from 'react-native';
 
 export enum NavigationScreens {
   PHOTO_LIST = 'photoListScreen',
@@ -34,14 +35,16 @@ const App = () => {
               title: 'Plants',
               headerBackVisible: false,
               headerRight: ({tintColor}) => (
-                <IconButton
-                  // iconName={'add'}
-                  // iconSize={24}
-                  //  iconColor={tintColor ?? '#000'}
+                <TouchableOpacity
                   onPress={() => {
                     navigation.navigate(NavigationScreens.ADD_PHOTO);
-                  }}
-                />
+                  }}>
+                  <IonicIcons
+                    name={'add'}
+                    size={24}
+                    color={tintColor ?? '#000'}
+                  />
+                </TouchableOpacity>
               ),
             })}></Stack.Screen>
           <Stack.Screen

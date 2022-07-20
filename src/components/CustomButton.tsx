@@ -13,7 +13,7 @@ const ButtonField = styled.TouchableOpacity`
   background: #00008b;
   width: 50%;
   border-radius: 10px;
-  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 interface Props {
