@@ -7,33 +7,35 @@ const Label = styled.Text`
   font-weight: bold;
 `;
 
-const InputField = styled.TextInput<{multiline: boolean}>`
+const InputField = styled.TextInput`
   align-self: center;
   width: 80%;
   border: black solid 1px;
   border-radius: 10px;
   padding: 10px;
   margin: 16px 0px 16px 0px;
-  ${props => {
-    if (props.multiline) {
-      return 'height: 150px';
-    } else return;
-  }}
 `;
 
 interface Props {
   label: string;
   placeholder: string;
   isMultiline?: boolean;
+  onTextChange(text: string): void;
 }
 
-export const CommonInput = ({label, isMultiline, placeholder}: Props) => {
+export const CommonInput = ({
+  label,
+  isMultiline,
+  placeholder,
+  onTextChange,
+}: Props) => {
   return (
     <>
       <Label>{label}</Label>
       <InputField
         multiline={isMultiline}
-        placeholder={placeholder}></InputField>
+        placeholder={placeholder}
+        onChangeText={onTextChange}></InputField>
     </>
   );
 };

@@ -1,5 +1,6 @@
 package com.galleryapp;
 
+import com.rnfs.RNFSPackage;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
