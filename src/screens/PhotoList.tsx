@@ -16,7 +16,7 @@ const ImageContainer = styled.Image`
 `;
 
 const renderImage = (image: IImage) => {
-  return <ImageContainer source={{uri: image.url}} />;
+  return image && <ImageContainer source={{uri: 'file://' + image.url}} />;
 };
 
 export const PhotoList = () => {
@@ -26,7 +26,7 @@ export const PhotoList = () => {
     <View>
       <FlatList<IImage>
         showsVerticalScrollIndicator={false}
-        data={imagesState}
+        data={imagesState || []}
         keyExtractor={item => `${item.id}`}
         renderItem={({item}) => renderImage(item)}
       />

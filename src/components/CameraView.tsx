@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import styled from 'styled-components/native';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {
@@ -7,6 +7,7 @@ import {
   useCameraDevices,
 } from 'react-native-vision-camera';
 import IonicIcons from 'react-native-vector-icons/Ionicons';
+import RNFS from 'react-native-fs';
 
 const AbsoluteContainer = styled.View`
   position: absolute;
@@ -45,10 +46,10 @@ const CameraButton = styled.View`
 
 interface Props {
   hideCameraView(): void;
-  getImageHandler(imagePath: string): void;
+  setImageLink(imagePath: string): void;
 }
 
-export const CameraView = ({hideCameraView, getImageHandler}: Props) => {
+export const CameraView = ({hideCameraView, setImageLink}: Props) => {
   const camera = useRef<Camera>(null);
   const [cameraPermissionStatus, setCameraPermissionStatus] =
     useState<CameraPermissionStatus>();
@@ -94,12 +95,17 @@ export const CameraView = ({hideCameraView, getImageHandler}: Props) => {
         <AbsoluteContainer>
           <Image source={{uri: `file:// + ${mediaUrl}`}} style={{flex: 1}} />
           <ImagePreviewFooter>
-            <TouchableOpacity onPress={() => setMediaUrl(null)}>
+            <TouchableOpacity
+              onPress={() => {
+                RNFS.unlink(mediaUrl);
+                setMediaUrl(null);
+              }}>
               <ButtonText>Retake</ButtonText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                getImageHandler(mediaUrl);
+                setImageLink(mediaUrl);
+
                 hideCameraView();
               }}>
               <ButtonText>Select</ButtonText>

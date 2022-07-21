@@ -1,11 +1,18 @@
-import React, {useState} from 'react';
-import {KeyboardAvoidingView, Platform, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import styled from 'styled-components/native';
 import {CustomButton} from '../components/CustomButton';
 import {CameraView} from '../components/CameraView';
 import {CommonInput} from '../components/CommonInput';
 import {useDispatch} from 'react-redux';
 import {addImage} from '../redux/actions/imageActions';
+import RNFS from 'react-native-fs';
 
 const ImageContainer = styled.Image`
   align-self: center;
@@ -22,66 +29,87 @@ export const AddPhoto = () => {
   const offset = Platform.OS === 'ios' ? 40 : 0;
   const dispatch = useDispatch<any>();
 
+  useEffect(() => {
+    console.log(imageLink);
+  }, [imageLink]);
+
+  const saveFileToDocuments = () => {
+    if (imageLink) {
+      const fileName = imageLink.split('/').pop();
+      RNFS.copyFile(imageLink, `${RNFS.DocumentDirectoryPath}/${fileName}`)
+        .then(() => {
+          RNFS.readDir(RNFS.DocumentDirectoryPath)
+            .then(response => {
+              setImageLink(response[response.length - 1].path);
+            })
+            .catch(reason => console.log(reason));
+        })
+        .catch(reason => {
+          console.log(reason);
+        });
+    }
+  };
+
   return (
-    <>
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior="position"
-        keyboardVerticalOffset={offset}>
-        {imageLink ? (
-          <ImageContainer
-            source={{
-              uri: Platform.OS === 'ios' ? imageLink : `file://${imageLink}`,
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={{flex: 1}}>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior="position"
+          keyboardVerticalOffset={offset}>
+          {imageLink ? (
+            <ImageContainer source={{uri: 'file://' + imageLink}} />
+          ) : (
+            <ImageContainer
+              source={require('../assets/defaultPlaceholder.png')}
+            />
+          )}
+
+          <CommonInput
+            label={'Title'}
+            placeholder={'Input title here...'}
+            onTextChange={setImageTitle}
+          />
+          <CommonInput
+            label={'Comment'}
+            placeholder={'Input comment here...'}
+            isMultiline={true}
+            onTextChange={setImageComment}
+          />
+          <CustomButton
+            buttonText={'Get photo from camera'}
+            onPress={() => {
+              Keyboard.dismiss;
+              setCameraVisible(true);
+              setImageLink(null);
             }}
           />
-        ) : (
-          <ImageContainer
-            source={require('../assets/defaultPlaceholder.png')}
+
+          {imageLink ? (
+            <CustomButton
+              buttonText={'save image'}
+              onPress={() => {
+                if (imageComment && imageTitle) {
+                  saveFileToDocuments();
+                  dispatch(
+                    addImage({
+                      title: imageTitle,
+                      comment: imageComment,
+                      url: imageLink,
+                    }),
+                  );
+                }
+              }}
+            />
+          ) : null}
+        </KeyboardAvoidingView>
+        {isCameraVisible && (
+          <CameraView
+            hideCameraView={() => setCameraVisible(false)}
+            setImageLink={setImageLink}
           />
         )}
-
-        <CommonInput
-          label={'Title'}
-          placeholder={'Input title here...'}
-          onTextChange={setImageTitle}
-        />
-        <CommonInput
-          label={'Comment'}
-          placeholder={'Input comment here...'}
-          isMultiline={true}
-          onTextChange={setImageComment}
-        />
-        <CustomButton
-          buttonText={'Get photo from camera'}
-          onPress={() => {
-            setCameraVisible(true);
-            setImageLink(null);
-          }}
-        />
-
-        {imageLink ? (
-          <CustomButton
-            buttonText={'save image'}
-            onPress={() => {
-              if (imageComment && imageTitle) {
-                dispatch(
-                  addImage({
-                    title: imageTitle,
-                    comment: imageComment,
-                    url: imageLink,
-                  }),
-                );
-              }
-            }}
-          />
-        ) : null}
-      </KeyboardAvoidingView>
-      {isCameraVisible && (
-        <CameraView
-          hideCameraView={() => setCameraVisible(false)}
-          getImageHandler={setImageLink}
-        />
-      )}
-    </>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
