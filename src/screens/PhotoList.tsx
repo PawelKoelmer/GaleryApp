@@ -1,8 +1,9 @@
 import React from 'react';
 import {FlatList, View} from 'react-native';
-import {samplePhotoList} from '../sampleData/sampleData';
 import styled from 'styled-components/native';
-import {ISampleData} from '../sampleData/ISampleData';
+import {IImage} from '../redux/Image.types';
+import {RootState} from '../redux/reduxStore';
+import {useSelector} from 'react-redux';
 
 const ImageContainer = styled.Image`
   width: 300px;
@@ -14,16 +15,18 @@ const ImageContainer = styled.Image`
   margin-top: 10px;
 `;
 
-const renderImage = (image: ISampleData) => {
-  return <ImageContainer source={{uri: image.url}} />;
+const renderImage = (image: IImage) => {
+  return image && <ImageContainer source={{uri: 'file://' + image.url}} />;
 };
 
 export const PhotoList = () => {
+  const imagesState = useSelector((state: RootState) => state.images.images);
+
   return (
     <View>
-      <FlatList<ISampleData>
+      <FlatList<IImage>
         showsVerticalScrollIndicator={false}
-        data={samplePhotoList || []}
+        data={imagesState || []}
         keyExtractor={item => `${item.id}`}
         renderItem={({item}) => renderImage(item)}
       />

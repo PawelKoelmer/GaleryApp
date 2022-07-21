@@ -15,6 +15,9 @@ import {PhotoList} from './src/screens/PhotoList';
 import {AddPhoto} from './src/screens/AddPhoto';
 import IonicIcons from 'react-native-vector-icons/Ionicons';
 import {TouchableOpacity} from 'react-native';
+import {Provider} from 'react-redux';
+import {persistor, store} from './src/redux/reduxStore';
+import {PersistGate} from 'redux-persist/integration/react';
 
 export enum NavigationScreens {
   PHOTO_LIST = 'photoListScreen',
@@ -26,33 +29,40 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name={NavigationScreens.PHOTO_LIST}
-            component={PhotoList}
-            options={({navigation}) => ({
-              title: 'Plants',
-              headerBackVisible: false,
-              headerRight: ({tintColor}) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate(NavigationScreens.ADD_PHOTO);
-                  }}>
-                  <IonicIcons
-                    name={'add'}
-                    size={24}
-                    color={tintColor ?? '#000'}
-                  />
-                </TouchableOpacity>
-              ),
-            })}></Stack.Screen>
-          <Stack.Screen
-            name={NavigationScreens.ADD_PHOTO}
-            component={AddPhoto}
-            options={{headerShown: true, title: 'Add photo'}}></Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <PersistGate persistor={persistor} loading={null}>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name={NavigationScreens.PHOTO_LIST}
+                component={PhotoList}
+                options={({navigation}) => ({
+                  title: 'Plants',
+                  headerBackVisible: false,
+                  headerRight: ({tintColor}) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate(NavigationScreens.ADD_PHOTO);
+                      }}>
+                      <IonicIcons
+                        name={'add'}
+                        size={24}
+                        color={tintColor ?? '#000'}
+                      />
+                    </TouchableOpacity>
+                  ),
+                })}></Stack.Screen>
+              <Stack.Screen
+                name={NavigationScreens.ADD_PHOTO}
+                component={AddPhoto}
+                options={{
+                  headerShown: true,
+                  title: 'Add photo',
+                }}></Stack.Screen>
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
     </>
   );
 };
