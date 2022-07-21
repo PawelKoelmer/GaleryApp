@@ -35,7 +35,8 @@ export const CommonInput = ({
       <InputField
         multiline={isMultiline}
         placeholder={placeholder}
-        onChangeText={onTextChange}></InputField>
+        onChangeText={onTextChange}
+      />
     </>
   );
 };

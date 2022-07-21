@@ -29,10 +29,6 @@ export const AddPhoto = () => {
   const offset = Platform.OS === 'ios' ? 40 : 0;
   const dispatch = useDispatch<any>();
 
-  useEffect(() => {
-    console.log(imageLink);
-  }, [imageLink]);
-
   const saveFileToDocuments = () => {
     if (imageLink) {
       const fileName = imageLink.split('/').pop();
@@ -47,6 +43,19 @@ export const AddPhoto = () => {
         .catch(reason => {
           console.log(reason);
         });
+    }
+  };
+
+  const saveImageHandler = () => {
+    if (imageComment && imageTitle && imageLink) {
+      saveFileToDocuments();
+      dispatch(
+        addImage({
+          title: imageTitle,
+          comment: imageComment,
+          url: imageLink,
+        }),
+      );
     }
   };
 
@@ -84,21 +93,11 @@ export const AddPhoto = () => {
               setImageLink(null);
             }}
           />
-
           {imageLink ? (
             <CustomButton
               buttonText={'save image'}
               onPress={() => {
-                if (imageComment && imageTitle) {
-                  saveFileToDocuments();
-                  dispatch(
-                    addImage({
-                      title: imageTitle,
-                      comment: imageComment,
-                      url: imageLink,
-                    }),
-                  );
-                }
+                saveImageHandler();
               }}
             />
           ) : null}

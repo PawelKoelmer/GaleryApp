@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import styled from 'styled-components/native';
-import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {Image, Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import {
   Camera,
   CameraPermissionStatus,
@@ -93,7 +93,12 @@ export const CameraView = ({hideCameraView, setImageLink}: Props) => {
       ) : null}
       {mediaUrl !== null ? (
         <AbsoluteContainer>
-          <Image source={{uri: `file:// + ${mediaUrl}`}} style={{flex: 1}} />
+          <Image
+            source={{
+              uri: Platform.OS === 'ios' ? mediaUrl : `file:// + ${mediaUrl}`,
+            }}
+            style={{flex: 1}}
+          />
           <ImagePreviewFooter>
             <TouchableOpacity
               onPress={() => {
@@ -105,7 +110,6 @@ export const CameraView = ({hideCameraView, setImageLink}: Props) => {
             <TouchableOpacity
               onPress={() => {
                 setImageLink(mediaUrl);
-
                 hideCameraView();
               }}>
               <ButtonText>Select</ButtonText>
