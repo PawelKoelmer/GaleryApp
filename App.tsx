@@ -18,11 +18,17 @@ import {TouchableOpacity} from 'react-native';
 import {Provider} from 'react-redux';
 import {persistor, store} from './src/redux/reduxStore';
 import {PersistGate} from 'redux-persist/integration/react';
+import {PreviewImage} from './src/screens/PreviewImage';
 
 export enum NavigationScreens {
   PHOTO_LIST = 'photoListScreen',
   ADD_PHOTO = 'addPhotoScreen',
+  PREVIEW_PHOTO = 'previewPhotoScreen',
 }
+
+export type NavigationScreensProps = {
+  [NavigationScreens.PREVIEW_PHOTO]: {id: number};
+};
 
 const Stack = createNativeStackNavigator();
 
@@ -37,7 +43,7 @@ const App = () => {
                 name={NavigationScreens.PHOTO_LIST}
                 component={PhotoList}
                 options={({navigation}) => ({
-                  title: 'Plants',
+                  title: 'Gallery',
                   headerBackVisible: false,
                   headerRight: ({tintColor}) => (
                     <TouchableOpacity
@@ -58,6 +64,13 @@ const App = () => {
                 options={{
                   headerShown: true,
                   title: 'Add photo',
+                }}></Stack.Screen>
+              <Stack.Screen
+                name={NavigationScreens.PREVIEW_PHOTO}
+                component={PreviewImage}
+                options={{
+                  headerShown: true,
+                  title: 'Preview photo',
                 }}></Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>
