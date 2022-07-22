@@ -79,6 +79,12 @@ export const PreviewImage = ({route}: Props) => {
     }
   }, []);
 
+  const savePhotoHandler = () => {
+    if (photoData?.id && editedComment) {
+      dispatch(updateImage(photoData.id, editedComment));
+    }
+  };
+
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior={'position'}>
       <TouchableWithoutFeedback
@@ -115,9 +121,7 @@ export const PreviewImage = ({route}: Props) => {
             <CustomButton
               buttonText={'Save changes'}
               onPress={() => {
-                if (photoData.id && editedComment) {
-                  dispatch(updateImage(photoData.id, editedComment));
-                }
+                savePhotoHandler();
               }}
             />
           ) : null}

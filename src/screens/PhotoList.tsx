@@ -25,7 +25,6 @@ export const PhotoList = () => {
 
   const renderImage = (image: IImage) => {
     return (
-      image &&
       image.id && (
         <TouchableOpacity
           onPress={() => {
