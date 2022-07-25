@@ -23,11 +23,14 @@ export const imagesSlice = createSlice({
       state.images[index].comment = action.payload.newComment;
     },
     deleteImageReducer: (state, action) => {
-      const image = state.images.find(image => image.id === action.payload);
-      state.images = state.images.filter(image => image.id !== action.payload);
-      if (image) {
-        const imagePath = image.url;
-        RNFS.unlink(imagePath).catch(reason => console.log(reason));
+      const index = state.images.findIndex(
+        photo => photo.id === action.payload.id,
+      );
+      state.images.splice(index, 1);
+      if (state.images[index].url) {
+        RNFS.unlink(state.images[index].url).catch(reason =>
+          console.log(reason),
+        );
       }
     },
   },

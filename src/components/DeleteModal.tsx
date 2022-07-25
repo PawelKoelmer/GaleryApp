@@ -60,7 +60,7 @@ export const DeleteModal = ({
         <Container>
           <TouchableWithoutFeedback>
             <ViewContainer>
-              <ModalText>{'Are you want to  delete image'}</ModalText>
+              <ModalText>{'Do you want to  delete image'}</ModalText>
               <View style={{flexDirection: 'row'}}>
                 <ModalButton
                   onPress={() => {
