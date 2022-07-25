@@ -65,6 +65,7 @@ export const DeleteModal = ({
                 <ModalButton
                   onPress={() => {
                     deleteImage();
+                    closeModal();
                   }}>
                   <ButtonText>{'Yes'}</ButtonText>
                 </ModalButton>
